@@ -10,10 +10,12 @@ import {
     X,
 } from "lucide-react";
 
+import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router";
 
-import { AUTH_KEYS } from "../constants/auth";
 import { ROUTES } from "../constants/routes";
+import type { AppDispatch } from "../store";
+import { logout } from "../store/slices/authSlice";
 
 interface SidebarProps {
     mobileOpen?: boolean;
@@ -24,8 +26,8 @@ const Sidebar = ({
     mobileOpen = false,
     onClose,
 }: SidebarProps) => {
-
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
     const navigationItems = [
         {
@@ -61,9 +63,7 @@ const Sidebar = ({
     ];
 
     const handleLogout = () => {
-
-        localStorage.removeItem(AUTH_KEYS.USER);
-        localStorage.removeItem(AUTH_KEYS.IS_LOGGED_IN);
+        dispatch(logout());
 
         navigate(ROUTES.LOGIN, {
             replace: true,
@@ -72,7 +72,6 @@ const Sidebar = ({
 
     return (
         <>
-
             {mobileOpen && (
                 <div
                     className="fixed inset-0 z-40 bg-black/40 lg:hidden"
@@ -90,11 +89,8 @@ const Sidebar = ({
                     ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
                 `}
             >
-
                 <div className="flex h-[96px] shrink-0 items-center justify-between px-7">
-
                     <div className="flex items-center gap-3">
-
                         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#6857ff] to-[#4d3df2] shadow-lg shadow-purple-500/20">
                             <Shield
                                 size={26}
@@ -106,7 +102,6 @@ const Sidebar = ({
                         <span className="text-[23px] font-bold tracking-tight text-white">
                             AdminPanel
                         </span>
-
                     </div>
 
                     <button
@@ -117,15 +112,11 @@ const Sidebar = ({
                     >
                         <X size={22} />
                     </button>
-
                 </div>
 
                 <nav className="flex-1 overflow-y-auto px-5 py-5">
-
                     <div className="space-y-2">
-
                         {navigationItems.map((item) => {
-
                             const Icon = item.icon;
 
                             if (item.path === "#") {
@@ -142,7 +133,6 @@ const Sidebar = ({
                                         />
 
                                         <span>{item.name}</span>
-
                                     </button>
                                 );
                             }
@@ -157,9 +147,10 @@ const Sidebar = ({
                                         rounded-2xl px-5 py-4
                                         text-[16px] font-medium
                                         transition-all duration-200
-                                        ${isActive
-                                            ? "bg-gradient-to-r from-[#6555f5] to-[#5644ec] text-white shadow-lg shadow-purple-900/30"
-                                            : "text-white/70 hover:bg-white/5 hover:text-white"
+                                        ${
+                                            isActive
+                                                ? "bg-gradient-to-r from-[#6555f5] to-[#5644ec] text-white shadow-lg shadow-purple-900/30"
+                                                : "text-white/70 hover:bg-white/5 hover:text-white"
                                         }
                                     `}
                                 >
@@ -167,7 +158,9 @@ const Sidebar = ({
                                         <>
                                             <Icon
                                                 size={22}
-                                                strokeWidth={isActive ? 2.2 : 1.8}
+                                                strokeWidth={
+                                                    isActive ? 2.2 : 1.8
+                                                }
                                                 className="shrink-0"
                                             />
 
@@ -177,13 +170,10 @@ const Sidebar = ({
                                 </NavLink>
                             );
                         })}
-
                     </div>
-
                 </nav>
 
                 <div className="mt-auto shrink-0 px-5 pb-7">
-
                     <button
                         type="button"
                         onClick={handleLogout}
@@ -196,13 +186,9 @@ const Sidebar = ({
                         />
 
                         <span>Logout</span>
-
                     </button>
-
                 </div>
-
             </aside>
-
         </>
     );
 };
